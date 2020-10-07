@@ -16,6 +16,7 @@ glm::mat4 viewMat;
 GLuint pvmMatrixID;
 
 float rotAngle = 0.0f;
+float armRotAngle = -0.1f;
 
 typedef glm::vec4  color4;
 typedef glm::vec4  point4;
@@ -130,15 +131,21 @@ init()
 void drawRobot(glm::mat4 robotMat) {
 	glm::mat4 modelMat, pvmMat;
 	glm::vec3 legPos[4];
+	glm::vec3 armPos[4];
 
 	legPos[0] = glm::vec3(0, -0.2, -0.1); // robot left upper leg
 	legPos[1] = glm::vec3(0, -0.4, -0.1); // robot left lower leg
 	legPos[2] = glm::vec3(0, -0.2, 0.1); // robot right lower leg
 	legPos[3] = glm::vec3(0, -0.4, 0.1); // robot right lower leg
 
+	armPos[0] = glm::vec3(0, 0.3, -0.3); // robot left upper arm
+	armPos[1] = glm::vec3(0, 0.13, -0.45); // robot left lower arm
+	armPos[2] = glm::vec3(0, 0.3, 0.3); // robot right upper arm
+	armPos[3] = glm::vec3(0, 0.13, 0.45); // robot right lower arm
+
 	// robot body
 	modelMat = glm::translate(robotMat, glm::vec3(0, 0.2, 0));
-	modelMat = glm::scale(modelMat, glm::vec3(0.4, 0.6, 0.4));
+	modelMat = glm::scale(modelMat, glm::vec3(0.35, 0.6, 0.4));
 	pvmMat = projectMat * viewMat * modelMat;
 	glUniformMatrix4fv(pvmMatrixID, 1, GL_FALSE, &pvmMat[0][0]);
 	glDrawArrays(GL_TRIANGLES, 0, NumVertices);
@@ -150,6 +157,7 @@ void drawRobot(glm::mat4 robotMat) {
 	glUniformMatrix4fv(pvmMatrixID, 1, GL_FALSE, &pvmMat[0][0]);
 	glDrawArrays(GL_TRIANGLES, 0, NumVertices);
 
+	// robot legs
 	for (int i = 0; i < 4; i++) {
 		modelMat = glm::translate(robotMat, legPos[i]);
 		modelMat = glm::scale(modelMat, glm::vec3(0.17, 0.2, 0.12));
@@ -158,37 +166,26 @@ void drawRobot(glm::mat4 robotMat) {
 		glDrawArrays(GL_TRIANGLES, 0, NumVertices);
 	}
 
-	// robot right upper arm
-	modelMat = glm::translate(robotMat, glm::vec3(0, 0.3, 0.3));
-	modelMat = glm::rotate(modelMat, -0.7f, glm::vec3(1.0f, 0, 0));
-	modelMat = glm::scale(modelMat, glm::vec3(0.17, 0.2, 0.12));
-	pvmMat = projectMat * viewMat * modelMat;
-	glUniformMatrix4fv(pvmMatrixID, 1, GL_FALSE, &pvmMat[0][0]);
-	glDrawArrays(GL_TRIANGLES, 0, NumVertices);
+	// robot arms
+	for (int i = 0; i < 4; i++) {
+		if (i < 2) {
+			modelMat = glm::rotate(robotMat, -armRotAngle * 10.0f, glm::vec3(0, 1, -1));
+			modelMat = glm::translate(modelMat, armPos[i]);
+			modelMat = glm::rotate(modelMat, 0.7f, glm::vec3(1.0f, 0, 0));
+		}
+		else {
+			modelMat = glm::rotate(robotMat, -armRotAngle * 10.0f, glm::vec3(0, 1, 1));
+			modelMat = glm::translate(modelMat, armPos[i]);
+			modelMat = glm::rotate(modelMat, -0.7f, glm::vec3(1.0f, 0, 0));
+		}
+		
+		modelMat = glm::scale(modelMat, glm::vec3(0.14, 0.22, 0.12));
+		pvmMat = projectMat * viewMat * modelMat;
+		glUniformMatrix4fv(pvmMatrixID, 1, GL_FALSE, &pvmMat[0][0]);
+		glDrawArrays(GL_TRIANGLES, 0, NumVertices);
+	}
 
-	// robot right lower arm
-	modelMat = glm::translate(robotMat, glm::vec3(0, 0.13, 0.45));
-	modelMat = glm::rotate(modelMat, -0.7f, glm::vec3(1.0f, 0, 0));
-	modelMat = glm::scale(modelMat, glm::vec3(0.17, 0.2, 0.12));
-	pvmMat = projectMat * viewMat * modelMat;
-	glUniformMatrix4fv(pvmMatrixID, 1, GL_FALSE, &pvmMat[0][0]);
-	glDrawArrays(GL_TRIANGLES, 0, NumVertices);
-
-	// robot right upper arm
-	modelMat = glm::translate(robotMat, glm::vec3(0, 0.3, -0.3));
-	modelMat = glm::rotate(modelMat, 0.7f, glm::vec3(1.0f, 0, 0));
-	modelMat = glm::scale(modelMat, glm::vec3(0.17, 0.2, 0.12));
-	pvmMat = projectMat * viewMat * modelMat;
-	glUniformMatrix4fv(pvmMatrixID, 1, GL_FALSE, &pvmMat[0][0]);
-	glDrawArrays(GL_TRIANGLES, 0, NumVertices);
-
-	// robot right lower arm
-	modelMat = glm::translate(robotMat, glm::vec3(0, 0.13, -0.45));
-	modelMat = glm::rotate(modelMat, 0.7f, glm::vec3(1.0f, 0, 0));
-	modelMat = glm::scale(modelMat, glm::vec3(0.17, 0.2, 0.12));
-	pvmMat = projectMat * viewMat * modelMat;
-	glUniformMatrix4fv(pvmMatrixID, 1, GL_FALSE, &pvmMat[0][0]);
-	glDrawArrays(GL_TRIANGLES, 0, NumVertices);
+	
 }
 
 void display(void) // matrix를 계산해서 넘겨줌
@@ -197,7 +194,7 @@ void display(void) // matrix를 계산해서 넘겨줌
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	worldMat = glm::rotate(glm::mat4(1.0f), rotAngle, glm::vec3(0, 1.0f, 0)); // 이전 transformation(identitiy matrix), rotation angle, 회전축
-	//worldMat = glm::mat4(1.0f);
+	worldMat = glm::mat4(1.0f);
 
 	drawRobot(worldMat);
 
@@ -206,16 +203,25 @@ void display(void) // matrix를 계산해서 넘겨줌
 }
 
 //----------------------------------------------------------------------------
+int state = 0;
 
 void idle()
 {
 	static int prevTime = glutGet(GLUT_ELAPSED_TIME);
 	int currTime = glutGet(GLUT_ELAPSED_TIME);
+	
 
 	if (abs(currTime - prevTime) >= 20)
 	{
 		float t = abs(currTime - prevTime);
 		rotAngle += glm::radians(t * 360.0f / 10000.0f);
+		if (state == 0 && armRotAngle > 0.1f) {
+			state = 1;
+		}
+		else if (state == 1 && armRotAngle < -0.1f) {
+			state = 0;
+		}
+		state == 1 ? armRotAngle -= 0.002f : armRotAngle += 0.002f;
 		prevTime = currTime;
 		glutPostRedisplay();
 	}

@@ -2,5 +2,5 @@ C:\Users\lee sung min\Desktop\cube_car\Debug\cube.exe
 C:\Users\lee sung min\Desktop\cube_car\Debug\cube.pdb
 C:\Users\lee sung min\Desktop\cube_car_주석\Debug\cube.exe
 C:\Users\lee sung min\Desktop\cube_car_주석\Debug\cube.pdb
-C:\Users\lee sung min\Desktop\openGL_robot\Debug\cube.exe
-C:\Users\lee sung min\Desktop\openGL_robot\Debug\cube.pdb
+C:\Users\lee sung min\Desktop\openGL_robot\Debug\robot.exe
+C:\Users\lee sung min\Desktop\openGL_robot\Debug\robot.pdb

@@ -17,6 +17,7 @@ GLuint pvmMatrixID;
 
 float rotAngle = 0.0f;
 float armRotAngle = -0.08f;
+float armLowerRotAngle = 0.0f;
 
 typedef glm::vec4  color4;
 typedef glm::vec4  point4;
@@ -141,7 +142,7 @@ void drawRobot(glm::mat4 robotMat) {
 	armPos[0] = glm::vec3(0, 0.3, -0.3); // robot left upper arm
 	armPos[1] = glm::vec3(0, 0.13, -0.45); // robot left lower arm
 	armPos[2] = glm::vec3(0, 0.3, 0.3); // robot right upper arm
-	armPos[3] = glm::vec3(0, 0.13, 0.45); // robot right lower arm
+	armPos[3] = glm::vec3(0, 0.13, 0.35); // robot right lower arm
 
 	// robot body
 	modelMat = glm::translate(robotMat, glm::vec3(0, 0.2, 0));
@@ -177,7 +178,12 @@ void drawRobot(glm::mat4 robotMat) {
 
 	// robot arms
 	for (int i = 0; i < 4; i++) {
-		if (i < 2) {
+		if (i== 3) {
+			modelMat = glm::rotate(robotMat, -armRotAngle * 10.0f, glm::vec3(0, 1, 1));
+			modelMat = glm::rotate(modelMat, -armLowerRotAngle*10.0f, glm::vec3(0, 0, 1));
+			modelMat = glm::translate(modelMat, armPos[i]);
+		}
+		else if (i < 2) {
 			modelMat = glm::rotate(robotMat, -armRotAngle * 10.0f, glm::vec3(0, 1, -1));
 			modelMat = glm::translate(modelMat, armPos[i]);
 			modelMat = glm::rotate(modelMat, 0.7f, glm::vec3(1.0f, 0, 0));
@@ -212,7 +218,8 @@ void display(void) // matrix를 계산해서 넘겨줌
 }
 
 //----------------------------------------------------------------------------
-int state = 0;
+int upperState = 0;
+int lowerState = 0;
 
 void idle()
 {
@@ -224,13 +231,21 @@ void idle()
 	{
 		float t = abs(currTime - prevTime);
 		rotAngle += glm::radians(t * 360.0f / 10000.0f);
-		if (state == 0 && armRotAngle > 0.08f) {
-			state = 1;
+		if (upperState == 0 && armRotAngle > 0.08f) {
+			upperState = 1;
 		}
-		else if (state == 1 && armRotAngle < -0.088f) {
-			state = 0;
+		else if (upperState == 1 && armRotAngle < -0.08f) {
+			upperState = 0;
 		}
-		state == 1 ? armRotAngle -= 0.003f : armRotAngle += 0.003f;
+		upperState == 1 ? armRotAngle -= 0.003f : armRotAngle += 0.003f;
+
+		if (lowerState == 0 && armLowerRotAngle > 0.05f) {
+			lowerState = 1;
+		}
+		else if (lowerState == 1 && armLowerRotAngle < 0.01f) {
+			lowerState = 0;
+		}
+		lowerState == 1 ? armLowerRotAngle -= 0.001f : armLowerRotAngle += 0.001f;
 		prevTime = currTime;
 		glutPostRedisplay();
 	}

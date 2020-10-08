@@ -16,7 +16,7 @@ glm::mat4 viewMat;
 GLuint pvmMatrixID;
 
 float rotAngle = 0.0f;
-float armRotAngle = -0.1f;
+float armRotAngle = -0.08f;
 
 typedef glm::vec4  color4;
 typedef glm::vec4  point4;
@@ -159,8 +159,17 @@ void drawRobot(glm::mat4 robotMat) {
 
 	// robot legs
 	for (int i = 0; i < 4; i++) {
-		modelMat = glm::translate(robotMat, legPos[i]);
-		modelMat = glm::scale(modelMat, glm::vec3(0.17, 0.2, 0.12));
+		if (i < 2) {
+			modelMat = glm::rotate(robotMat, armRotAngle * 10.0f, glm::vec3(0, 1, -1));
+			modelMat = glm::translate(modelMat, legPos[i]);
+			modelMat = glm::scale(modelMat, glm::vec3(0.17, 0.2, 0.12));
+		}
+		else {
+			modelMat = glm::rotate(robotMat, -armRotAngle * 10.0f, glm::vec3(0, 1, -1));
+			modelMat = glm::translate(modelMat, legPos[i]);
+			modelMat = glm::scale(modelMat, glm::vec3(0.17, 0.2, 0.12));
+		}
+		
 		pvmMat = projectMat * viewMat * modelMat;
 		glUniformMatrix4fv(pvmMatrixID, 1, GL_FALSE, &pvmMat[0][0]);
 		glDrawArrays(GL_TRIANGLES, 0, NumVertices);
@@ -215,13 +224,13 @@ void idle()
 	{
 		float t = abs(currTime - prevTime);
 		rotAngle += glm::radians(t * 360.0f / 10000.0f);
-		if (state == 0 && armRotAngle > 0.1f) {
+		if (state == 0 && armRotAngle > 0.08f) {
 			state = 1;
 		}
-		else if (state == 1 && armRotAngle < -0.1f) {
+		else if (state == 1 && armRotAngle < -0.088f) {
 			state = 0;
 		}
-		state == 1 ? armRotAngle -= 0.002f : armRotAngle += 0.002f;
+		state == 1 ? armRotAngle -= 0.003f : armRotAngle += 0.003f;
 		prevTime = currTime;
 		glutPostRedisplay();
 	}

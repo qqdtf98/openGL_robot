@@ -136,7 +136,7 @@ void drawRobot(glm::mat4 robotMat) {
 	glm::vec3 armPos[4];
 
 	legPos[0] = glm::vec3(0, -0.2, -0.1); // robot right upper leg
-	legPos[1] = glm::vec3(0.22, -0.35, -0.1); // robot right lower leg
+	legPos[1] = glm::vec3(-0.22, -0.35, -0.1); // robot right lower leg
 	legPos[2] = glm::vec3(0, -0.2, 0.1); // robot let upper leg
 	legPos[3] = glm::vec3(-0.22, -0.35, 0.1); // robot left lower leg
 
@@ -161,34 +161,26 @@ void drawRobot(glm::mat4 robotMat) {
 
 	// robot legs
 	for (int i = 0; i < 4; i++) {
-		if (i == 3) {
-			/*modelMat = glm::rotate(robotMat, -legLowerRotAngle * 11.0f, glm::vec3(0, 0, -1));
+		if (i == 0) {
+			modelMat = glm::rotate(robotMat, -armRotAngle * 10.0f, glm::vec3(0, 0, 1));
 			modelMat = glm::translate(modelMat, legPos[i]);
-			modelMat = glm::rotate(modelMat, 0.5f, glm::vec3(0, 0, -1));
-			modelMat = glm::scale(modelMat, glm::vec3(0.17, 0.2, 0.12));*/
-
+		}
+		else if (i == 1) {
+			modelMat = glm::rotate(robotMat, 1.35f, glm::vec3(0, 0, 1));
+			modelMat = glm::rotate(modelMat, -legLowerRotAngle * 10.0f, glm::vec3(0, 0, -1));
+			modelMat = glm::translate(modelMat, legPos[i]);
+			modelMat = glm::rotate(modelMat, -0.25f, glm::vec3(0, 0, 1));
+		}
+		else if (i == 2) {
+			modelMat = glm::rotate(robotMat, -armRotAngle * 10.0f, glm::vec3(0, 0, -1));
+			modelMat = glm::translate(modelMat, legPos[i]);
+		}
+		else {
 			modelMat = glm::rotate(robotMat, -legLowerRotAngle * 10.0f, glm::vec3(0, 0, 1));
 			modelMat = glm::translate(modelMat, legPos[i]);
 			modelMat = glm::rotate(modelMat, -0.25f, glm::vec3(0, 0, 1));
-			modelMat = glm::scale(modelMat, glm::vec3(0.17, 0.2, 0.12));
 		}
-		else if (i == 1) {
-			printf("%f\n", legLowerRotAngle * 10.0f);
-			modelMat = glm::rotate(robotMat, 1.34f-legLowerRotAngle * 10.0f, glm::vec3(0, 0, -1));
-			modelMat = glm::translate(modelMat, legPos[i]);
-			modelMat = glm::rotate(modelMat, -0.25f, glm::vec3(0, 0, -1));
-			modelMat = glm::scale(modelMat, glm::vec3(0.17, 0.2, 0.12));
-		}
-		else if (i < 2) {
-			modelMat = glm::rotate(robotMat, -armRotAngle * 10.0f, glm::vec3(0, 0, 1));
-			modelMat = glm::translate(modelMat, legPos[i]);
-			modelMat = glm::scale(modelMat, glm::vec3(0.17, 0.2, 0.12));
-		}
-		else {
-			modelMat = glm::rotate(robotMat, -armRotAngle * 10.0f, glm::vec3(0, 0, -1));
-			modelMat = glm::translate(modelMat, legPos[i]);
-			modelMat = glm::scale(modelMat, glm::vec3(0.17, 0.2, 0.12));
-		}
+		modelMat = glm::scale(modelMat, glm::vec3(0.17, 0.2, 0.12));
 		
 		pvmMat = projectMat * viewMat * modelMat;
 		glUniformMatrix4fv(pvmMatrixID, 1, GL_FALSE, &pvmMat[0][0]);
@@ -225,7 +217,7 @@ void display(void) // matrix를 계산해서 넘겨줌
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	worldMat = glm::rotate(glm::mat4(1.0f), rotAngle, glm::vec3(0, 1.0f, 0)); // 이전 transformation(identitiy matrix), rotation angle, 회전축
-	worldMat = glm::mat4(1.0f);
+	//worldMat = glm::mat4(1.0f);
 
 	drawRobot(worldMat);
 

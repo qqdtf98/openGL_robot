@@ -211,13 +211,12 @@ void drawRobot(glm::mat4 robotMat) {
 	
 }
 
-void display(void) // matrix를 계산해서 넘겨줌
+void display(void)
 {
 	glm::mat4 worldMat, pvmMat;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	worldMat = glm::rotate(glm::mat4(1.0f), rotAngle, glm::vec3(0, 1.0f, 0)); // 이전 transformation(identitiy matrix), rotation angle, 회전축
-	//worldMat = glm::mat4(1.0f);
+	worldMat = glm::rotate(glm::mat4(1.0f), rotAngle, glm::vec3(0, 1.0f, 0));
 
 	drawRobot(worldMat);
 

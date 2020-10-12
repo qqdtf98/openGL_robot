@@ -167,12 +167,12 @@ void drawRobot(glm::mat4 robotMat) {
 		}
 		else if (i == 1) {
 			modelMat = glm::rotate(robotMat, 1.35f, glm::vec3(0, 0, 1));
-			modelMat = glm::rotate(modelMat, -legLowerRotAngle * 10.0f, glm::vec3(0, 0, -1));
+			modelMat = glm::rotate(modelMat, legLowerRotAngle * 10.0f, glm::vec3(0, 0, 1));
 			modelMat = glm::translate(modelMat, legPos[i]);
 			modelMat = glm::rotate(modelMat, -0.25f, glm::vec3(0, 0, 1));
 		}
 		else if (i == 2) {
-			modelMat = glm::rotate(robotMat, -armRotAngle * 10.0f, glm::vec3(0, 0, -1));
+			modelMat = glm::rotate(robotMat, armRotAngle * 10.0f, glm::vec3(0, 0, 1));
 			modelMat = glm::translate(modelMat, legPos[i]);
 		}
 		else {

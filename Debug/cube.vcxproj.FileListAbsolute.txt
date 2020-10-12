@@ -6,3 +6,5 @@ C:\Users\lee sung min\Desktop\openGL_robot\Debug\robot.exe
 C:\Users\lee sung min\Desktop\openGL_robot\Debug\robot.pdb
 C:\Users\이성민\Desktop\openGL_robot\Debug\robot.exe
 C:\Users\이성민\Desktop\openGL_robot\Debug\robot.pdb
+C:\Users\lee sung min\Desktop\cube_car\openGL_robot\Debug\robot.exe
+C:\Users\lee sung min\Desktop\cube_car\openGL_robot\Debug\robot.pdb
